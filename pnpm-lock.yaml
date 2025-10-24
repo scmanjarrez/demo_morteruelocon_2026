@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tma.js/sdk-vue':
-        specifier: ^1.0.4
-        version: 1.0.4(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
+        specifier: ^1.0.7
+        version: 1.0.7(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
       '@tonconnect/ui':
         specifier: ^2.0.9
         version: 2.3.1
@@ -564,16 +564,16 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@tma.js/bridge@2.1.2':
-    resolution: {integrity: sha512-aAkHT7qhiEcr8uzoUaK0yI20eTz2EKw2+h21WkCmFmeyRLM0xPcwffUWQNpH9LR0bVuO/LMX/7ntsf9WOCYimw==}
+  '@tma.js/bridge@2.1.3':
+    resolution: {integrity: sha512-mJPdGP3AgQ10ovW2A/yKdLPqhMt1Mx/uHvXRz1qyyy9L6kQlCojx68ib1Km7jumKdYvljy3470Yhk18V65pcdw==}
 
-  '@tma.js/sdk-vue@1.0.4':
-    resolution: {integrity: sha512-3L+pUMbH+W9m8aZnzKfnIfCPOb5pt6csAyfTCw9OXAPZA9eY2DuowLw3I3NKnC50azMjmRWiU1FDnnnxDfx4cg==}
+  '@tma.js/sdk-vue@1.0.7':
+    resolution: {integrity: sha512-tZ3vKOEE3dlzeibI7QeqwqyprOQ+FP9+3HDsLe6nf02cADwcxdJ41hTo9wst2imgykf2dDpE1dyZJrdCL6i+Xw==}
     peerDependencies:
       vue: ^3.0.0
 
-  '@tma.js/sdk@3.0.4':
-    resolution: {integrity: sha512-X6jwSPrPWlqS1nRyBxITlqEVzIPWiZo0JOCpQFgC8xNmAlOkAV4N/IR9KYfAjxEo94Vy5YmySoL97AYcUFJU/Q==}
+  '@tma.js/sdk@3.0.7':
+    resolution: {integrity: sha512-5CEHqs3HQTEjls+XLkZ5IS+j9dwVfCnQFoaL3jRwQqISqHDrLYds1h4TLvZ+vROTaAxVyJZtbLA+QorX+TldDw==}
 
   '@tma.js/signals@1.0.1':
     resolution: {integrity: sha512-i2HUuwGqL4BmM5KAklAUhMhlEgUOF+F4nMHHS/zxrmD0upHE/0CiXCEdQxVeeOGN6e2RrKlonA40sDtR6OUDCw==}
@@ -2286,7 +2286,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@tma.js/bridge@2.1.2(typescript@5.9.3)':
+  '@tma.js/bridge@2.1.3(typescript@5.9.3)':
     dependencies:
       '@tma.js/signals': 1.0.1
       '@tma.js/toolkit': 1.0.2
@@ -2300,16 +2300,16 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@tma.js/sdk-vue@1.0.4(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))':
+  '@tma.js/sdk-vue@1.0.7(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))':
     dependencies:
-      '@tma.js/sdk': 3.0.4(typescript@5.9.3)
+      '@tma.js/sdk': 3.0.7(typescript@5.9.3)
       vue: 3.5.22(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
 
-  '@tma.js/sdk@3.0.4(typescript@5.9.3)':
+  '@tma.js/sdk@3.0.7(typescript@5.9.3)':
     dependencies:
-      '@tma.js/bridge': 2.1.2(typescript@5.9.3)
+      '@tma.js/bridge': 2.1.3(typescript@5.9.3)
       '@tma.js/signals': 1.0.1
       '@tma.js/toolkit': 1.0.2
       '@tma.js/transformers': 1.1.1(typescript@5.9.3)

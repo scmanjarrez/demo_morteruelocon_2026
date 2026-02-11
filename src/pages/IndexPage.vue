@@ -1,12 +1,44 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { routes } from '@/router';
 import AppPage from '@/components/AppPage.vue';
 import AppLink from '@/components/AppLink.vue';
+import { popup } from '@tma.js/sdk-vue';
 
-const nonIndexRoutes = computed(() => routes.filter((r) => !!r.meta?.title));
 const clipboardDemo = computed(() => routes.find((r) => r.name === 'clipboard-demo'));
-const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.name !== 'clipboard-demo'));
+const clipboardContent = ref<string>('');
+const isReading = ref(false);
+
+async function readClipboard() {
+  isReading.value = true;
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const text = await navigator.clipboard.readText();
+      clipboardContent.value = text;
+
+      await popup.show({
+        title: '📋 Contenido del Portapapeles',
+        message: text || '(vacío)',
+        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
+      });
+    } else {
+      await popup.show({
+        title: '⚠️ No disponible',
+        message: 'La lectura del portapapeles no está disponible en este navegador o plataforma.',
+        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
+      });
+    }
+  } catch (error) {
+    console.error('Error al leer el portapapeles:', error);
+    await popup.show({
+      title: '⚠️ Permiso denegado',
+      message: 'No se pudo leer el portapapeles. Es posible que necesites dar permisos explícitos.',
+      buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
+    });
+  } finally {
+    isReading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -43,28 +75,42 @@ const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.nam
         </AppLink>
       </div>
 
-      <div class="additional-pages">
-        <h3>Páginas Adicionales</h3>
-        <ul class="index-page__links">
-          <li
-            v-for="route in otherRoutes"
-            :key="route.name"
-            class="index-page__link-item"
-          >
-            <AppLink
-              class="index-page__link"
-              :to="{ name: route.name }"
-            >
-              <i
-                v-if="route.meta?.icon"
-                class="index-page__link-icon"
-              >
-                <component :is="route.meta.icon" />
-              </i>
-              {{ route.meta!.title }}
-            </AppLink>
-          </li>
-        </ul>
+      <div class="clipboard-reader">
+        <h3>🔍 Comprobar Portapapeles</h3>
+        <p class="reader-description">
+          Haz clic en el botón para ver qué hay actualmente en tu portapapeles.
+          Esta funcionalidad demuestra cómo las aplicaciones pueden leer el portapapeles.
+        </p>
+        <button
+          class="read-button"
+          @click="readClipboard"
+          :disabled="isReading"
+        >
+          <span v-if="isReading">⏳ Leyendo...</span>
+          <span v-else>📋 Leer Portapapeles</span>
+        </button>
+      </div>
+
+      <div class="info-section">
+        <div class="info-card">
+          <h3>⚠️ ¿Por qué es peligroso?</h3>
+          <ul>
+            <li>No requiere vulnerabilidades técnicas</li>
+            <li>Aprovecha la confianza del usuario</li>
+            <li>Difícil de detectar sin revisar</li>
+            <li>Funciona en cualquier plataforma desktop</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>🛡️ Cómo protegerse</h3>
+          <ul>
+            <li>Siempre revisa antes de pegar en terminal</li>
+            <li>Desconfía de "validaciones" mediante comandos</li>
+            <li>Usa herramientas que muestren el portapapeles</li>
+            <li>Educa a tus usuarios sobre estos riesgos</li>
+          </ul>
+        </div>
       </div>
 
       <div class="footer-info">
@@ -160,40 +206,90 @@ const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.nam
   flex-shrink: 0;
 }
 
-.additional-pages {
-  margin-top: 40px;
-  padding-top: 32px;
-  border-top: 2px solid var(--tg-theme-section-separator-color, #e0e0e0);
+.clipboard-reader {
+  background: var(--tg-theme-bg-color, #fff);
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px solid var(--tg-theme-hint-color, #999);
+  margin-bottom: 32px;
 }
 
-.additional-pages h3 {
+.clipboard-reader h3 {
+  margin: 0 0 12px 0;
   font-size: 18px;
-  margin: 0 0 16px 0;
   color: var(--tg-theme-text-color, #000);
 }
 
-.index-page__links {
+.reader-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tg-theme-text-color, #000);
+  opacity: 0.8;
+  margin: 0 0 16px 0;
+}
+
+.read-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-theme-button-text-color, white);
+  background: var(--tg-theme-button-color, #3390ec);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.read-button:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.read-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.info-section {
+  display: grid;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.info-card {
+  background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--tg-theme-section-separator-color, #e0e0e0);
+}
+
+.info-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.info-card ul {
+  margin: 0;
+  padding-left: 20px;
   list-style: none;
-  padding-left: 0;
 }
 
-.index-page__link {
+.info-card ul li {
+  position: relative;
+  padding-left: 8px;
+  margin: 10px 0;
+  line-height: 1.5;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.info-card ul li::before {
+  content: '•';
+  position: absolute;
+  left: -12px;
+  color: var(--tg-theme-link-color, #3390ec);
   font-weight: bold;
-  display: inline-flex;
-  gap: 5px;
-}
-
-.index-page__link-item+.index-page__link-item {
-  margin-top: 10px;
-}
-
-.index-page__link-icon {
-  width: 20px;
-  display: block;
-}
-
-.index-page__link-icon svg {
-  display: block;
 }
 
 .footer-info {

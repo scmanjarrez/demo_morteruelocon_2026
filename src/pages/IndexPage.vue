@@ -48,7 +48,7 @@ const clipboardDemo = computed(() => routes.find((r) => r.name === 'clipboard-de
             <li>No requiere vulnerabilidades técnicas</li>
             <li>Aprovecha la confianza del usuario</li>
             <li>Difícil de detectar sin revisar</li>
-            <li>Funciona en cualquier plataforma desktop</li>
+            <li>Funciona en cualquier plataforma</li>
           </ul>
         </div>
 

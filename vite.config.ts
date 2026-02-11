@@ -7,6 +7,7 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/vuejs-template',
   plugins: [
     vue(),
     vueDevTools(),
@@ -15,7 +16,6 @@ export default defineConfig({
     // https://www.npmjs.com/package/vite-plugin-mkcert
     process.env.HTTPS ? mkcert() : undefined,
   ],
-  base: "https://scmanjarrez.github.io/demo_morteruelocon_2026/",
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

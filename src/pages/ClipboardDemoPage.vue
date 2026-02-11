@@ -327,6 +327,8 @@ function clearContent() {
   border-radius: 8px;
   resize: vertical;
   transition: border-color 0.2s;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .paste-area:focus {

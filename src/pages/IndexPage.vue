@@ -1,22 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { routes } from '@/router';
 import AppPage from '@/components/AppPage.vue';
 import AppLink from '@/components/AppLink.vue';
 
 const clipboardDemo = computed(() => routes.find((r) => r.name === 'clipboard-demo'));
-const pastedContent = ref<string>('');
-
-function handlePaste() {
-  // El contenido ya estará en pastedContent gracias al v-model
-  if (pastedContent.value.trim()) {
-    // Opcional: podrías hacer algo con el contenido aquí
-  }
-}
-
-function clearContent() {
-  pastedContent.value = '';
-}
 </script>
 
 <template>
@@ -51,38 +39,6 @@ function clearContent() {
             <span class="arrow">→</span>
           </div>
         </AppLink>
-      </div>
-
-      <div class="clipboard-reader">
-        <h3>🔍 Comprobar Portapapeles</h3>
-        <p class="reader-description">
-          Después de hacer clic en "Validar mi Cuenta" en la demo, vuelve aquí y pega (Ctrl+V o Cmd+V)
-          el contenido de tu portapapeles en el campo de abajo para comprobar que se ha inyectado el payload.
-        </p>
-        <textarea
-          v-model="pastedContent"
-          class="paste-area"
-          placeholder="Pega aquí el contenido de tu portapapeles (Ctrl+V o Cmd+V)..."
-          @paste="handlePaste"
-        ></textarea>
-        <div
-          class="button-group"
-          v-if="pastedContent"
-        >
-          <button
-            class="clear-button"
-            @click="clearContent"
-          >
-            🗑️ Limpiar
-          </button>
-        </div>
-        <div
-          v-if="pastedContent"
-          class="result-box"
-        >
-          <p class="result-label">✅ Contenido detectado:</p>
-          <code class="result-content">{{ pastedContent }}</code>
-        </div>
       </div>
 
       <div class="info-section">
@@ -220,80 +176,6 @@ function clearContent() {
   color: var(--tg-theme-text-color, #000);
   opacity: 0.8;
   margin: 0 0 16px 0;
-}
-
-.paste-area {
-  width: 100%;
-  min-height: 120px;
-  padding: 12px;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  color: var(--tg-theme-text-color, #000);
-  background: var(--tg-theme-bg-color, #fff);
-  border: 2px solid var(--tg-theme-section-separator-color, #e0e0e0);
-  border-radius: 8px;
-  resize: vertical;
-  transition: border-color 0.2s;
-}
-
-.paste-area:focus {
-  outline: none;
-  border-color: var(--tg-theme-button-color, #3390ec);
-}
-
-.paste-area::placeholder {
-  color: var(--tg-theme-hint-color, #999);
-  font-style: italic;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.clear-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--tg-theme-destructive-text-color, #ff3b30);
-  background: transparent;
-  border: 2px solid var(--tg-theme-destructive-text-color, #ff3b30);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.clear-button:hover {
-  background: var(--tg-theme-destructive-text-color, #ff3b30);
-  color: white;
-}
-
-.result-box {
-  margin-top: 16px;
-  padding: 16px;
-  background: #e8f5e9;
-  border: 2px solid #4caf50;
-  border-radius: 8px;
-}
-
-.result-label {
-  margin: 0 0 8px 0;
-  font-weight: 600;
-  color: #2e7d32;
-  font-size: 14px;
-}
-
-.result-content {
-  display: block;
-  padding: 12px;
-  background: #fff;
-  border-radius: 6px;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  color: #000;
-  word-break: break-all;
-  white-space: pre-wrap;
 }
 
 .info-section {

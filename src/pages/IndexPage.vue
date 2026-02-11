@@ -3,41 +3,19 @@ import { computed, ref } from 'vue';
 import { routes } from '@/router';
 import AppPage from '@/components/AppPage.vue';
 import AppLink from '@/components/AppLink.vue';
-import { popup } from '@tma.js/sdk-vue';
 
 const clipboardDemo = computed(() => routes.find((r) => r.name === 'clipboard-demo'));
-const clipboardContent = ref<string>('');
-const isReading = ref(false);
+const pastedContent = ref<string>('');
 
-async function readClipboard() {
-  isReading.value = true;
-  try {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      const text = await navigator.clipboard.readText();
-      clipboardContent.value = text;
-
-      await popup.show({
-        title: '📋 Contenido del Portapapeles',
-        message: text || '(vacío)',
-        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-      });
-    } else {
-      await popup.show({
-        title: '⚠️ No disponible',
-        message: 'La lectura del portapapeles no está disponible en este navegador o plataforma.',
-        buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-      });
-    }
-  } catch (error) {
-    console.error('Error al leer el portapapeles:', error);
-    await popup.show({
-      title: '⚠️ Permiso denegado',
-      message: 'No se pudo leer el portapapeles. Es posible que necesites dar permisos explícitos.',
-      buttons: [{ id: 'ok', type: 'default', text: 'OK' }],
-    });
-  } finally {
-    isReading.value = false;
+function handlePaste() {
+  // El contenido ya estará en pastedContent gracias al v-model
+  if (pastedContent.value.trim()) {
+    // Opcional: podrías hacer algo con el contenido aquí
   }
+}
+
+function clearContent() {
+  pastedContent.value = '';
 }
 </script>
 
@@ -78,17 +56,33 @@ async function readClipboard() {
       <div class="clipboard-reader">
         <h3>🔍 Comprobar Portapapeles</h3>
         <p class="reader-description">
-          Haz clic en el botón para ver qué hay actualmente en tu portapapeles.
-          Esta funcionalidad demuestra cómo las aplicaciones pueden leer el portapapeles.
+          Después de hacer clic en "Validar mi Cuenta" en la demo, vuelve aquí y pega (Ctrl+V o Cmd+V)
+          el contenido de tu portapapeles en el campo de abajo para comprobar que se ha inyectado el payload.
         </p>
-        <button
-          class="read-button"
-          @click="readClipboard"
-          :disabled="isReading"
+        <textarea
+          v-model="pastedContent"
+          class="paste-area"
+          placeholder="Pega aquí el contenido de tu portapapeles (Ctrl+V o Cmd+V)..."
+          @paste="handlePaste"
+        ></textarea>
+        <div
+          class="button-group"
+          v-if="pastedContent"
         >
-          <span v-if="isReading">⏳ Leyendo...</span>
-          <span v-else>📋 Leer Portapapeles</span>
-        </button>
+          <button
+            class="clear-button"
+            @click="clearContent"
+          >
+            🗑️ Limpiar
+          </button>
+        </div>
+        <div
+          v-if="pastedContent"
+          class="result-box"
+        >
+          <p class="result-label">✅ Contenido detectado:</p>
+          <code class="result-content">{{ pastedContent }}</code>
+        </div>
       </div>
 
       <div class="info-section">
@@ -228,27 +222,78 @@ async function readClipboard() {
   margin: 0 0 16px 0;
 }
 
-.read-button {
+.paste-area {
   width: 100%;
-  padding: 14px;
-  font-size: 16px;
+  min-height: 120px;
+  padding: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000);
+  background: var(--tg-theme-bg-color, #fff);
+  border: 2px solid var(--tg-theme-section-separator-color, #e0e0e0);
+  border-radius: 8px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.paste-area:focus {
+  outline: none;
+  border-color: var(--tg-theme-button-color, #3390ec);
+}
+
+.paste-area::placeholder {
+  color: var(--tg-theme-hint-color, #999);
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.clear-button {
+  padding: 10px 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--tg-theme-button-text-color, white);
-  background: var(--tg-theme-button-color, #3390ec);
-  border: none;
+  color: var(--tg-theme-destructive-text-color, #ff3b30);
+  background: transparent;
+  border: 2px solid var(--tg-theme-destructive-text-color, #ff3b30);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.read-button:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.clear-button:hover {
+  background: var(--tg-theme-destructive-text-color, #ff3b30);
+  color: white;
 }
 
-.read-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.result-box {
+  margin-top: 16px;
+  padding: 16px;
+  background: #e8f5e9;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+}
+
+.result-label {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+.result-content {
+  display: block;
+  padding: 12px;
+  background: #fff;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #000;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .info-section {

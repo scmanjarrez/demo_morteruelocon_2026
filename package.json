@@ -4,7 +4,7 @@
   "description": "Demo educativa de seguridad para MorterueloCon 2026 - Manipulación de portapapeles en Telegram Mini Apps",
   "private": true,
   "type": "module",
-  "homepage": "https://github.com/scmanjarrez/demo_morteruelocon_2026",
+  "homepage": "https://scmanjarrez.github.io/demo_morteruelocon_2026",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",

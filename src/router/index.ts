@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import IndexPage from '@/pages/IndexPage.vue';
+import ClipboardDemoPage from '@/pages/ClipboardDemoPage.vue';
 import InitDataPage from '@/pages/InitDataPage.vue';
 import ThemeParamsPage from '@/pages/ThemeParamsPage.vue';
 import LaunchParamsPage from '@/pages/LaunchParamsPage.vue';
@@ -11,6 +12,14 @@ export const routes = [
     path: '/',
     name: 'index',
     component: IndexPage,
+  },
+  {
+    path: '/clipboard-demo',
+    name: 'clipboard-demo',
+    component: ClipboardDemoPage,
+    meta: {
+      title: '🔒 Demo Portapapeles',
+    },
   },
   {
     path: '/init-data',

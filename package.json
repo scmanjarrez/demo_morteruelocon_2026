@@ -1,9 +1,10 @@
 {
-  "name": "vuejs-template",
-  "version": "0.0.1",
+  "name": "demo-morteruelocon-2026",
+  "version": "1.0.0",
+  "description": "Demo educativa de seguridad para MorterueloCon 2026 - Manipulación de portapapeles en Telegram Mini Apps",
   "private": true,
   "type": "module",
-  "homepage": "https://telegram-mini-apps.github.io/vuejs-template",
+  "homepage": "https://github.com/scmanjarrez/demo_morteruelocon_2026",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",

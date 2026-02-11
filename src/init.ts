@@ -40,8 +40,8 @@ export async function init(options: {
     mockTelegramEnv({
       onEvent(event, next) {
         if (event.name === 'web_app_request_theme') {
-          const tp = firstThemeSent 
-            ? themeParams.state() 
+          const tp = firstThemeSent
+            ? themeParams.state()
             : (retrieveLaunchParams().tgWebAppThemeParams || {});
           firstThemeSent = true;
           return emitEvent('theme_changed', { theme_params: tp as any });

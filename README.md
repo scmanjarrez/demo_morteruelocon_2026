@@ -167,8 +167,8 @@ After this, you will see a similar message in your terminal:
 ```bash
 VITE v5.2.12  ready in 237 ms
 
-➜  Local:   https://localhost:5173/vuejs-template
-➜  Network: https://192.168.0.109:5173/vuejs-template
+➜  Local:   https://localhost:5173/demo_morteruelocon_2026
+➜  Network: https://192.168.0.109:5173/demo_morteruelocon_2026
 
 ➜  press h + enter to show help
 ```

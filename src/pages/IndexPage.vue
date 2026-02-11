@@ -10,19 +10,28 @@ const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.nam
 </script>
 
 <template>
-  <AppPage title="MorterueloCon 2026" :back="false">
+  <AppPage
+    title="MorterueloCon 2026"
+    :back="false"
+  >
     <div class="home-container">
       <div class="hero-section">
         <h2>🎯 Demo de Seguridad</h2>
         <p class="subtitle">Manipulación de Portapapeles en Mini Apps de Telegram</p>
         <p class="description">
-          Esta demo muestra cómo un atacante podría usar ingeniería social combinada con 
+          Esta demo muestra cómo un atacante podría usar ingeniería social combinada con
           manipulación del portapapeles para comprometer sistemas de escritorio.
         </p>
       </div>
 
-      <div class="main-demo" v-if="clipboardDemo">
-        <AppLink class="demo-button-link" :to="{ name: clipboardDemo.name }">
+      <div
+        class="main-demo"
+        v-if="clipboardDemo"
+      >
+        <AppLink
+          class="demo-button-link"
+          :to="{ name: clipboardDemo.name }"
+        >
           <div class="demo-button-content">
             <span class="demo-icon">🔒</span>
             <div class="demo-text">
@@ -37,9 +46,19 @@ const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.nam
       <div class="additional-pages">
         <h3>Páginas Adicionales</h3>
         <ul class="index-page__links">
-          <li v-for="route in otherRoutes" :key="route.name" class="index-page__link-item">
-            <AppLink class="index-page__link" :to="{ name: route.name }">
-              <i v-if="route.meta?.icon" class="index-page__link-icon">
+          <li
+            v-for="route in otherRoutes"
+            :key="route.name"
+            class="index-page__link-item"
+          >
+            <AppLink
+              class="index-page__link"
+              :to="{ name: route.name }"
+            >
+              <i
+                v-if="route.meta?.icon"
+                class="index-page__link-icon"
+              >
                 <component :is="route.meta.icon" />
               </i>
               {{ route.meta!.title }}
@@ -164,7 +183,7 @@ const otherRoutes = computed(() => routes.filter((r) => !!r.meta?.title && r.nam
   gap: 5px;
 }
 
-.index-page__link-item + .index-page__link-item {
+.index-page__link-item+.index-page__link-item {
   margin-top: 10px;
 }
 
